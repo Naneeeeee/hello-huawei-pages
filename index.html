@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华为工龄计算器 · 我在华为的每一天</title>
+<style>
+  :root {
+    --hw-red: #C7000B;
+    --hw-red-light: #e0232d;
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --text-sub: #6b7280;
+    --line: #e6e8eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: radial-gradient(circle at 20% 0%, #fff 0%, var(--bg) 45%, #eceef1 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .wrap { width: 100%; max-width: 560px; }
+  header { text-align: center; margin-bottom: 28px; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--hw-red);
+  }
+  .logo .petal {
+    width: 22px; height: 22px;
+    background: var(--hw-red);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    transform: rotate(45deg);
+  }
+  h1 { font-size: 26px; font-weight: 700; margin-top: 14px; letter-spacing: 1px; }
+  .subtitle { color: var(--text-sub); font-size: 14px; margin-top: 8px; }
+
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(255,255,255,0.8);
+  }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 10px; letter-spacing: 0.5px; }
+  .field { position: relative; }
+  input[type="date"] {
+    width: 100%;
+    padding: 15px 16px;
+    font-size: 17px;
+    font-family: inherit;
+    color: var(--text);
+    background: #fafbfc;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+  }
+  input[type="date"]:focus {
+    border-color: var(--hw-red);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(199, 0, 11, 0.08);
+  }
+
+  .result {
+    margin-top: 26px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--hw-red) 0%, #9e0009 100%);
+    color: #fff;
+    padding: 26px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .result::after {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .result .label { font-size: 13px; opacity: .85; letter-spacing: 2px; }
+  .days {
+    font-size: 58px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 8px 0 2px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+  }
+  .days small { font-size: 20px; font-weight: 600; margin-left: 6px; opacity: .9; }
+
+  .detail {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 18px;
+    position: relative;
+  }
+  .detail .item {
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 10px 6px;
+  }
+  .detail .num { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .detail .cap { font-size: 11px; opacity: .8; margin-top: 2px; }
+
+  .footer-note {
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--text-sub);
+    text-align: center;
+    line-height: 1.7;
+  }
+  .hint { margin-top: 14px; font-size: 12px; color: #b0b4bb; text-align: center; }
+  @media (max-width: 420px) {
+    .days { font-size: 46px; }
+    .card { padding: 22px; }
+    h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><span class="petal"></span>HUAWEI</div>
+    <h1>我在华为的每一天</h1>
+    <p class="subtitle">输入你的入职日期，看看你与华为同行的时光</p>
+  </header>
+
+  <div class="card">
+    <label for="joinDate">入职日期</label>
+    <div class="field">
+      <input type="date" id="joinDate">
+    </div>
+
+    <div class="result" id="result" hidden>
+      <div class="label">已在华为工作</div>
+      <div class="days" id="days">0<small>天</small></div>
+      <div class="detail">
+        <div class="item">
+          <div class="num" id="ymdYears">0</div>
+          <div class="cap">年</div>
+        </div>
+        <div class="item">
+          <div class="num" id="ymdMonths">0</div>
+          <div class="cap">个月</div>
+        </div>
+        <div class="item">
+          <div class="num" id="ymdDays">0</div>
+          <div class="cap">天</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-note" id="note">请选择入职日期后自动计算</p>
+    <p class="hint">按自然日计算，入职当天计为第 1 天</p>
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById('joinDate');
+  const resultBox = document.getElementById('result');
+  const daysEl = document.getElementById('days');
+  const noteEl = document.getElementById('note');
+  const yEl = document.getElementById('ymdYears');
+  const mEl = document.getElementById('ymdMonths');
+  const dEl = document.getElementById('ymdDays');
+
+  // 今天（本地时区，按自然日零点计）
+  function todayLocal() {
+    const n = new Date();
+    return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  }
+
+  function parseLocal(str) {
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+  function diffDays(from, to) {
+    return Math.round((to - from) / MS_PER_DAY) + 1; // 含入职当天
+  }
+
+  // 加 n 个月（自动处理月末，如 1/31 + 1 个月 = 2/28）
+  function addMonths(date, n) {
+    const y = date.getFullYear();
+    const m = date.getMonth() + n;
+    const day = date.getDate();
+    const lastDay = new Date(y, m + 1, 0).getDate();
+    return new Date(y, m, Math.min(day, lastDay));
+  }
+
+  // 计算满 X 年 Y 月 Z 天
+  function ymdBetween(from, to) {
+    let years = to.getFullYear() - from.getFullYear();
+    let cursor = addMonths(from, years * 12);
+    if (cursor > to) {
+      years -= 1;
+      cursor = addMonths(from, years * 12);
+    }
+    let months = 0;
+    while (addMonths(cursor, 1) <= to) {
+      cursor = addMonths(cursor, 1);
+      months += 1;
+    }
+    const days = Math.round((to - cursor) / MS_PER_DAY);
+    return { years, months, days };
+  }
+
+  function formatDate(d) {
+    return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
+  }
+
+  function calc() {
+    const val = input.value;
+    if (!val) {
+      resultBox.hidden = true;
+      noteEl.textContent = '请选择入职日期后自动计算';
+      return;
+    }
+
+    const join = parseLocal(val);
+    const today = todayLocal();
+
+    if (isNaN(join.getTime())) return;
+
+    if (join > today) {
+      resultBox.hidden = true;
+      noteEl.textContent = '⚠️ 入职日期晚于今天，请检查输入';
+      return;
+    }
+
+    const total = diffDays(join, today);
+    const { years, months, days } = ymdBetween(join, today);
+    const next = addMonths(join, (years + 1) * 12);
+    const remain = Math.round((next - today) / MS_PER_DAY);
+
+    daysEl.innerHTML = total.toLocaleString('zh-CN') + '<small>天</small>';
+    yEl.textContent = years;
+    mEl.textContent = months;
+    dEl.textContent = days;
+    noteEl.innerHTML = `入职于 ${formatDate(join)} · 距入司 ${years + 1} 周年还有 <strong>${remain}</strong> 天`;
+    resultBox.hidden = false;
+  }
+
+  // 默认值：不预填，避免误读
+  input.addEventListener('input', calc);
+  input.addEventListener('change', calc);
+  calc();
+</script>
+</body>
+</html>
